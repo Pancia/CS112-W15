@@ -10,9 +10,9 @@ hw1Tests :: [Test]
 hw1Tests =
         ["citeAuthor puts first name and last name in reverse order" ~:
           citeAuthor "Herman" "Melville" ~?= "Melville, Herman"
-        , initials "Herman" "Melville" ~?= "H.M"
+        , initials "Herman" "Melville" ~?= "H.M."
         , title testBook ~?= "Moby Dick"
-        , citeBook testBook ~?= "Moby Dick (HermanMelville, 1851)"
+        , citeBook testBook ~?= "Moby Dick (Herman Melville, 1851)"
         , bibliography_rec [testBook] ~?= "TODO"
         , bibliography_fold [testBook] ~?= "TODO"
         , averageYear [("","",1),("","",3)] ~?= 2
