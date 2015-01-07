@@ -28,18 +28,22 @@ bibliography_fold (book : books)
 averageYear :: [Book] -> Int
 averageYear books = sum ys `div` length ys
         where ys = map getYear books
+              getYear :: Book -> Int
               getYear (_, _, y) = y
 
 isReference :: String -> Bool
 isReference ('[':_:"]") = True
 isReference word = False
 
+fromJustOrError :: String -> Maybe a -> a
+fromJustOrError _ (Just a) = a
+fromJustOrError e _        = error e
+
+invalidRefMsg = "invalid reference format"
+
 getRefNum :: String -> Int
-getRefNum ('[':i:"]") = fromJust $ readMaybe [i]
-        where fromJust :: Maybe a -> a
-              fromJust (Just a) = a
-              fromJust a        = error "invalid reference format"
-getRefNum ref = error "invalid reference format"
+getRefNum ('[':i:"]") = fromJustOrError invalidRefMsg $ readMaybe [i]
+getRefNum ref = error invalidRefMsg
 
 references :: String -> Int
 references = length . filter isReference . words
