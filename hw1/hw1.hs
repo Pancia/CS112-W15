@@ -21,8 +21,9 @@ bibliography_rec (b : []) = citeBook b
 bibliography_rec (b : bs) = citeBook b ++ "\n" ++ bibliography_rec bs
 
 bibliography_fold :: [Book] -> String
-bibliography_fold (book : books) = foldl citeBookAndNewLine (citeBook book) books
-        where citeBookAndNewLine acc b = acc ++ "\n" ++ citeBook b
+bibliography_fold (book : books)
+        = foldl (\acc b -> acc ++ "\n" ++ citeBook b)
+                (citeBook book) books
 
 averageYear :: [Book] -> Int
 averageYear books = sum ys `div` length ys
