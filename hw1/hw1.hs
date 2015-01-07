@@ -1,24 +1,26 @@
 module Hw1 where
 
+type Book = (String, String, Int)
+
 citeAuthor :: String -> String -> String
 citeAuthor = undefined
 
 initials :: String -> String -> String
 initials = undefined
 
-title :: (String, String, Int) -> String
+title :: Book -> String
 title = undefined
 
-citeBook :: (String, String, Int) -> String
+citeBook :: Book -> String
 citeBook = undefined
 
-bibliography_rec :: [(String, String, Int)] -> String
+bibliography_rec :: [Book] -> String
 bibliography_rec = undefined
 
-bibliography_fold :: [(String, String, Int)] -> String
+bibliography_fold :: [Book] -> String
 bibliography_fold = undefined
 
-averageYear :: [(String, String, Int)] -> Int
+averageYear :: [Book] -> Int
 averageYear = undefined
 
 references :: String -> Int
@@ -29,7 +31,7 @@ references = undefined
 --      "up destroying them.  In case of [2] this is a whale..."
 --references txt -- -> 3
 
-citeText :: [(String, String, Int)] -> String -> String
+citeText :: [Book] -> String -> String
 citeText = undefined
 --let gatsby = ("F. Scott Fitzgerald", "The Great Gatsby", 1925)
 --let moby = ("Herman Melville", "Moby Dick", 1851)
