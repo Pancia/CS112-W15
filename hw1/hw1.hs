@@ -1,39 +1,51 @@
 module Hw1 where
 
+import Text.Read
+
 type Book = (String, String, Int)
 
 citeAuthor :: String -> String -> String
-citeAuthor = undefined
+citeAuthor first last = last ++ ", " ++ first
 
 initials :: String -> String -> String
-initials = undefined
+initials first last = [head first] ++ "." ++ [head last] ++ "."
 
 title :: Book -> String
-title = undefined
+title (_, t, _) = t
 
 citeBook :: Book -> String
-citeBook = undefined
+citeBook (a, t, y) = t ++ " (" ++ a ++ ", " ++ show y ++ ")"
 
 bibliography_rec :: [Book] -> String
-bibliography_rec = undefined
+bibliography_rec (b : []) = citeBook b
+bibliography_rec (b : bs) = citeBook b ++ "\n" ++ bibliography_rec bs
 
 bibliography_fold :: [Book] -> String
-bibliography_fold = undefined
+bibliography_fold (book : books) = foldl citeBookAndNewLine (citeBook book) books
+        where citeBookAndNewLine acc b = acc ++ "\n" ++ citeBook b
 
 averageYear :: [Book] -> Int
-averageYear = undefined
+averageYear books = sum ys `div` length ys
+        where ys = map getYear books
+              getYear (_, _, y) = y
+
+isReference :: String -> Bool
+isReference ('[':_:"]") = True
+isReference word = False
+
+getRefNum :: String -> Int
+getRefNum ('[':i:"]") = fromJust $ readMaybe [i]
+        where fromJust :: Maybe a -> a
+              fromJust (Just a) = a
+              fromJust a        = error "invalid reference format"
+getRefNum ref = error "invalid reference format"
 
 references :: String -> Int
-references = undefined
---txt :: String
---txt = "[1] and [2] both feature characters who will do whatever it takes to " ++
---      "get to their goal, and in the end the thing they want the most ends " ++
---      "up destroying them.  In case of [2] this is a whale..."
---references txt -- -> 3
+references = length . filter isReference . words
 
 citeText :: [Book] -> String -> String
-citeText = undefined
---let gatsby = ("F. Scott Fitzgerald", "The Great Gatsby", 1925)
---let moby = ("Herman Melville", "Moby Dick", 1851)
---citeText [gatsby, moby] txt
--- "The Great Gatsby (F. Scott Fitzgerald, 1925) and Moby Dick (Herman Melville, 1851) both feature..."
+citeText refs = unwords . map refToCited . words
+        where refToCited :: String -> String
+              refToCited ref
+                    | isReference ref = citeBook $ refs !! (getRefNum ref - 1)
+                    | otherwise       = ref
