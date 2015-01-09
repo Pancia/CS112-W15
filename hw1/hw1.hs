@@ -21,7 +21,9 @@ citeBook (a, t, y) = t ++ " (" ++ a ++ ", " ++ show y ++ ")"
 bibliography_rec :: [Book] -> String
 bibliography_rec [] = ""
 bibliography_rec [b] = citeBook b
-bibliography_rec (b : bs) = citeBook b ++ "\n" ++ bibliography_rec bs
+bibliography_rec (b : bs) = citeBook b
+                            ++ "\n" ++
+                            bibliography_rec bs
 
 bibliography_fold :: [Book] -> String
 bibliography_fold [] = ""
