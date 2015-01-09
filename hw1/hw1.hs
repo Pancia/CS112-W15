@@ -39,7 +39,7 @@ fromJustOrError :: String -> Maybe a -> a
 fromJustOrError _ (Just a) = a
 fromJustOrError e _        = error e
 
-invalidRefMsg = "invalid reference format"
+invalidRefMsg = "invalid reference format, expected [%d]"
 
 getRefNum :: String -> Int
 getRefNum ('[':i:"]") = fromJustOrError invalidRefMsg $ readMaybe [i]
