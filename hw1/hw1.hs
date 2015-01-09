@@ -8,7 +8,7 @@ citeAuthor :: String -> String -> String
 citeAuthor first last = last ++ ", " ++ first
 
 initials :: String -> String -> String
-initials first last = [head first] ++ "." ++ [head last] ++ "."
+initials (f:_) (l:_) = f : "." ++ l : "."
 
 title :: Book -> String
 title (_, t, _) = t
