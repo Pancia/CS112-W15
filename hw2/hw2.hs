@@ -39,7 +39,7 @@ divRemainder x y = (quot', rem')
               rem'  = x `mod` y
 
 digitSum :: Int -> Int
-digitSum = sum . map C.digitToInt . show
+digitSum = sum . map C.digitToInt . show . abs
 
 --sayNum :: String -> String
 sayNum = chunksOf 3 . reverse
