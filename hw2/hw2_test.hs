@@ -21,4 +21,9 @@ hw2Tests =
         ,divRemainder 12 4 ~?= (3,0)
         ,divRemainder 23 5 ~?= (4,3)
         ,digitSum 123 ~?= 6
+        ,digitSum (-323) ~?= 8
+        ,sayNum "5" ~?= "five "
+        ,sayNum "23" ~?= "twenty three "
+        ,sayNum "82379" ~?= "eighty two thousand three hundred seventy nine "
+        ,sayNum "93218065" ~?= "ninety three million two hundred eighteen thousand sixty five "
         ]

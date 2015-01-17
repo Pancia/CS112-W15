@@ -41,5 +41,5 @@ divRemainder x y = (quot', rem')
 digitSum :: Int -> Int
 digitSum = sum . map C.digitToInt . show . abs
 
---sayNum :: String -> String
-sayNum = chunksOf 3 . reverse
+sayNum :: String -> String
+sayNum = concat . chunksOf 3
