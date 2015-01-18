@@ -62,11 +62,17 @@ digitSum = sum . map C.digitToInt . show . abs
 
 sayNum :: String -> String
 sayNum (c1:cs) = case ((length cs) `mod` 3) of
-					0 -> ones !! ((C.ord(c1)) - 48) ++ " " ++ 
+					0 -> if ((length cs) > 0)
+							then 
+								ones !! ((C.ord(c1)) - 48) ++ " " ++ 
 					     (snd (large_nums !! (((length cs) `div` 3) - 1)))
+					     	else
+					     		ones !! ((C.ord(c1)) - 48)
+
+					
 					1 -> "not handled: mod is 1"
 					2 -> "not handled: mod is 2"
---if 0 then hundreds
---if 1 then ones
---if 2 then tens
+--if 0 then ones
+--if 1 then tens
+--if 2 then hundreds
 		
