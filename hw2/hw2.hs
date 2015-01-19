@@ -76,9 +76,9 @@ sayNum' num@(c:cs) = case length cs `mod` 3 of
                     0 -> if (length cs) > 0
                             --if not the ones place of the original input
                             then
-                                ones !! C.digitToInt c ++ " " ++
-                                    fromJust (lookup (length cs) largeNums) ++
-                                    " " ++ sayNum cs
+                                ones !! C.digitToInt c ++ " "
+                                ++ fromJust (lookup (length cs) largeNums)
+                                ++ " " ++ sayNum cs
                              --if it is the ones place from the original input
                              else if c == '0' then 
                                 "zero "
@@ -96,15 +96,15 @@ sayNum' num@(c:cs) = case length cs `mod` 3 of
                             --if the first number is one and the second is not 0
                             --then the number is 11, 12... handles special case
                             else
-                                teens !! C.digitToInt (head cs) ++ " " ++
-                                    fromMaybe "" (lookup (length cs - 1) largeNums) ++
-                                    " " ++ (sayNum (tail cs))
+                                teens !! C.digitToInt (head cs) ++ " "
+                                ++ fromMaybe "" (lookup (length cs - 1) largeNums)
+                                ++ " " ++ (sayNum (tail cs))
                     --if 2 then hundreds place
                     2 -> if c /= '0'
                             --if c is not 0 then say something like "three hundred"
                             then
-                                ones !! C.digitToInt c ++ " hundred " ++
-                                    sayNum cs
+                                ones !! C.digitToInt c ++ " hundred "
+                                ++ sayNum cs
                             --else, say nothing because you don't say "zero hundred"
                             else
                                 sayNum cs
