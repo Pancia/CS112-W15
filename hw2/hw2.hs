@@ -104,7 +104,7 @@ sayNum' num@(c:cs) = case length cs `mod` 3 of
                             --if c is not 0 then say something like "three hundred"
                             then
                                 ones !! C.digitToInt c ++ " hundred " ++
-                                sayNum cs
+                                    sayNum cs
                             --else, say nothing because you don't say "zero hundred"
                             else
                                 sayNum cs
