@@ -70,7 +70,8 @@ teens = ["", "eleven", "twelve", "thirteen",
 
 sayNum :: String -> String
 sayNum = (++ " ") . unwords . removeLastZero . words . convNum
-        where removeLastZero it = if length it > 1 && last it == "zero"
+        where removeLastZero :: [String] -> [String]
+              removeLastZero it = if length it > 1 && last it == "zero"
                                       then init it
                                       else it
               convNum :: String -> String
@@ -78,17 +79,18 @@ sayNum = (++ " ") . unwords . removeLastZero . words . convNum
               convNum (c:cs) =
                   case length cs `mod` 3 of
                       0 | not (null cs) ->
-                               ones !! C.digitToInt c ++ " "
+                               ones !! i ++ " "
                                ++ fromJust (lookup (length cs) largeNums)
-                               ++ " " ++ convNum cs
+                               ++ " " ++ recur
                         | c == '0' -> "zero "
-                        | otherwise -> ones !! C.digitToInt c ++ " "
-                      1 | c /= '1' -> tens !! C.digitToInt c ++ " " ++ convNum cs
-                        | head cs == '0' -> "ten " ++ convNum cs
+                        | otherwise -> ones !! i ++ " "
+                      1 | c /= '1' -> tens !! i ++ " " ++ recur
+                        | head cs == '0' -> "ten " ++ recur
                         --otherwise => 1[1..9] ie: teens
                         | otherwise -> teens !! C.digitToInt (head cs) ++ " "
                                ++ fromMaybe "" (lookup (length cs - 1) largeNums)
                                ++ " " ++ convNum (tail cs)
-                      2 | c /= '0'  -> ones !! C.digitToInt c ++ " hundred "
-                               ++ convNum cs
-                        | otherwise -> convNum cs
+                      2 | c /= '0' -> ones !! i ++ " hundred " ++ recur
+                        | otherwise -> recur
+                  where i = C.digitToInt c
+                        recur = convNum cs
