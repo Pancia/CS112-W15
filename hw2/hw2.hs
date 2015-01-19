@@ -61,32 +61,41 @@ digitSum = sum . map C.digitToInt . show . abs
 sayNum :: String -> String
 sayNum [] = []
 --Not sure how to do case "0". Line below makes weird print statements
+--like "ten zero " when we want "ten "
 --sayNum "0" = "zero"
 sayNum (c1:cs) = case ((length cs) `mod` 3) of
-					--if 0 then ones
+					--if 0 then ones place
 					0 -> if ((length cs) > 0)
+							--if not the ones place of the original input
 							then 
 								ones !! ((C.ord(c1)) - 49) ++ " " ++ 
 					     (snd (large_nums !! (((length cs) `div` 3) - 1))) ++ 
 					     " " ++ (sayNum cs)
+					     	--if it is the ones place from the original input
 					     	else
 					     		ones !! ((C.ord(c1)) - 49) ++ " " ++ (sayNum cs)
-					--if 1 then tens
+					--if 1 then tens place
 					1 -> if (c1 /= '1')
+							--if the number is not 1
 							then 
 								tens !! ((C.ord(c1)) - 49) ++ " " ++ (sayNum cs)
+							--if the second number is 0 then it is ten
 							else if ((head cs) == '0')
 								then
 									"ten " ++ (sayNum cs)
+							--if the first number is one and the second is not 0
+							--then the number is 11, 12... handles special case
 							else
 								teens !! ((C.ord(head cs) - 49)) ++ " " ++ 
 								(snd (large_nums !! (((length cs) `div` 3) - 1))) ++ 
 					     		" " ++ (sayNum (tail cs))
-					--if 2 then hundreds
+					--if 2 then hundreds place
 					2 -> if (c1 /= '0')
+							--if c1 is not 0 then say something like "three hundred"
 							then
 								ones !! ((C.ord(c1)) - 49) ++ " hundred " ++
 								(sayNum cs)
+							--else, say nothing because you don't say "zero hundred"
 							else
 								(sayNum cs)
 		
