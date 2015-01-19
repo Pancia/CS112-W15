@@ -18,9 +18,8 @@ tens = ["ten", "twenty", "thirty", "forty", "fifty",
         "sixty", "seventy", "eighty", "ninety"]
 ones = ["one", "two", "three", "four", "five", "six", 
         "seven", "eight", "nine"]
-teens = [("1", "eleven"), ("2", "twelve"), ("3", "thriteen"),
-       	 ("4", "fourteen"), ("5", "fifteen"), ("6", "sixteen"),
-       	 ("7", "seventeen"), ("8", "eighteen"), ("9", "nineteen")]
+teens = ["eleven", "twelve", "thriteen", "fourteen", "fifteen", "sixteen",
+       	 "seventeen", "eighteen", "nineteen"]
 
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
 myFoldl _ i []     = i
@@ -64,6 +63,7 @@ sayNum [] = []
 --Not sure how to do case "0". Line below makes weird print statements
 --sayNum "0" = "zero"
 sayNum (c1:cs) = case ((length cs) `mod` 3) of
+					--if 0 then ones
 					0 -> if ((length cs) > 0)
 							then 
 								ones !! ((C.ord(c1)) - 49) ++ " " ++ 
@@ -71,9 +71,22 @@ sayNum (c1:cs) = case ((length cs) `mod` 3) of
 					     " " ++ (sayNum cs)
 					     	else
 					     		ones !! ((C.ord(c1)) - 49) ++ " " ++ (sayNum cs)
-					1 -> tens !! ((C.ord(c1)) - 49) ++ " " ++ (sayNum cs)
-					2 -> ones !! ((C.ord(c1)) - 49) ++ " hundred " ++ (sayNum cs)
---if 0 then ones
---if 1 then tens
---if 2 then hundreds
+					--if 1 then tens
+					1 -> if (c1 /= '1')
+							then 
+								tens !! ((C.ord(c1)) - 49) ++ " " ++ (sayNum cs)
+							else if ((head cs) == '0')
+								then
+									"ten " ++ (sayNum cs)
+							else
+								teens !! ((C.ord(head cs) - 49)) ++ " " ++ 
+								(snd (large_nums !! (((length cs) `div` 3) - 1))) ++ 
+					     		" " ++ (sayNum (tail cs))
+					--if 2 then hundreds
+					2 -> if (c1 /= '0')
+							then
+								ones !! ((C.ord(c1)) - 49) ++ " hundred " ++
+								(sayNum cs)
+							else
+								(sayNum cs)
 		
