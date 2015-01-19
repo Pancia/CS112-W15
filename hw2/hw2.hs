@@ -67,12 +67,12 @@ sayNum (c1:cs) = case ((length cs) `mod` 3) of
 					0 -> if ((length cs) > 0)
 							then 
 								ones !! ((C.ord(c1)) - 49) ++ " " ++ 
-					     (snd (large_nums !! (((length cs) `div` 3) - 1))) ++
-					     (sayNum cs)
+					     (snd (large_nums !! (((length cs) `div` 3) - 1))) ++ 
+					     " " ++ (sayNum cs)
 					     	else
 					     		ones !! ((C.ord(c1)) - 49) ++ " " ++ (sayNum cs)
 					1 -> tens !! ((C.ord(c1)) - 49) ++ " " ++ (sayNum cs)
-					2 -> "not handled: mod is 2" ++ (sayNum cs)
+					2 -> ones !! ((C.ord(c1)) - 49) ++ " hundred " ++ (sayNum cs)
 --if 0 then ones
 --if 1 then tens
 --if 2 then hundreds
