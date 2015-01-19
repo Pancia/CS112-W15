@@ -6,6 +6,7 @@ import Data.Maybe
 import qualified Data.Char as C
 
 --HERE BE DRAGONS
+--TODO: Remove me
 import Debug.Trace
 
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
@@ -45,6 +46,7 @@ divRemainder x y = (quot', rem')
 digitSum :: Int -> Int
 digitSum = sum . map C.digitToInt . show . abs
 
+largeNums :: [(Int, String)]
 largeNums = [(3, "thousand"), (6, "million"), (9, "billion"),
              (12, "trillion"), (15, "quadrillion"),
              (18, "quintillion"), (21, "sextillion"),
@@ -55,57 +57,38 @@ largeNums = [(3, "thousand"), (6, "million"), (9, "billion"),
              (48, "quindecillion"), (51, "sexdecillion"),
              (54, "septendecillion"), (57, "octodecillion"),
              (60, "novemdecillion"), (63, "vigintillion")]
+tens :: [String]
 tens = ["", "ten", "twenty", "thirty", "forty", "fifty",
         "sixty", "seventy", "eighty", "ninety"]
+ones :: [String]
 ones = ["", "one", "two", "three", "four", "five", "six",
         "seven", "eight", "nine"]
+teens :: [String]
 teens = ["", "eleven", "twelve", "thirteen",
          "fourteen", "fifteen", "sixteen",
          "seventeen", "eighteen", "nineteen"]
 
 sayNum :: String -> String
-sayNum = (++ " ") . unwords . removeLastZero . words . sayNum'
+sayNum = (++ " ") . unwords . removeLastZero . words . convNum
         where removeLastZero it = if length it > 1 && last it == "zero"
                                       then init it
                                       else it
-
-sayNum' :: String -> String
-sayNum' [] = []
-sayNum' num@(c:cs) = case length cs `mod` 3 of
-                    --if 0 then ones place
-                    0 -> if (length cs) > 0
-                            --if not the ones place of the original input
-                            then
-                                ones !! C.digitToInt c ++ " "
-                                ++ fromJust (lookup (length cs) largeNums)
-                                ++ " " ++ sayNum cs
-                             --if it is the ones place from the original input
-                             else if c == '0' then 
-                                "zero "
-                             else
-                                 ones !! C.digitToInt c ++ " "
-                    --if 1 then tens place
-                    1 -> if c /= '1'
-                            --if the number is not 1
-                            then
-                                tens !! C.digitToInt c ++ " " ++ sayNum cs
-                            --if the second number is 0 then it is ten
-                            else if head cs == '0'
-                                then
-                                    "ten " ++ sayNum cs
-                            --if the first number is one and the second is not 0
-                            --then the number is 11, 12... handles special case
-                            else
-                                teens !! C.digitToInt (head cs) ++ " "
-                                ++ fromMaybe "" (lookup (length cs - 1) largeNums)
-                                ++ " " ++ (sayNum (tail cs))
-                    --if 2 then hundreds place
-                    2 -> if c /= '0'
-                            --if c is not 0 then say something like "three hundred"
-                            then
-                                ones !! C.digitToInt c ++ " hundred "
-                                ++ sayNum cs
-                            --else, say nothing because you don't say "zero hundred"
-                            else
-                                sayNum cs
-
+              convNum :: String -> String
+              convNum [] = []
+              convNum (c:cs) =
+                  case length cs `mod` 3 of
+                      0 | not (null cs) ->
+                               ones !! C.digitToInt c ++ " "
+                               ++ fromJust (lookup (length cs) largeNums)
+                               ++ " " ++ convNum cs
+                        | c == '0' -> "zero "
+                        | otherwise -> ones !! C.digitToInt c ++ " "
+                      1 | c /= '1' -> tens !! C.digitToInt c ++ " " ++ convNum cs
+                        | head cs == '0' -> "ten " ++ convNum cs
+                        --otherwise => 1[1..9] ie: teens
+                        | otherwise -> teens !! C.digitToInt (head cs) ++ " "
+                               ++ fromMaybe "" (lookup (length cs - 1) largeNums)
+                               ++ " " ++ convNum (tail cs)
+                      2 | c /= '0'  -> ones !! C.digitToInt c ++ " hundred "
+                               ++ convNum cs
+                        | otherwise -> convNum cs
