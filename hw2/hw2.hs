@@ -77,20 +77,21 @@ sayNum = (++ " ") . unwords . removeLastZero . words . convNum
               convNum :: String -> String
               convNum [] = []
               convNum (c:cs) =
+                  --If case 0 => 1's pos (x, x000..)
+                  --     if 1 => 10's pos (x0, x0000..)
+                  --     if 2 => 100's pos (x00, x00000..)
                   case length cs `mod` 3 of
                       0 | not (null cs) ->
                                ones !! i ++ " "
                                ++ fromJust (lookup (length cs) largeNums)
-                               ++ " " ++ recur
+                               ++ " " ++ convNum cs
                         | c == '0' -> "zero "
                         | otherwise -> ones !! i ++ " "
-                      1 | c /= '1' -> tens !! i ++ " " ++ recur
-                        | head cs == '0' -> "ten " ++ recur
-                        --otherwise => 1[1..9] ie: teens
+                      1 | c /= '1' -> tens !! i ++ " " ++ convNum cs
+                        | head cs == '0' -> "ten " ++ convNum cs
                         | otherwise -> teens !! C.digitToInt (head cs) ++ " "
                                ++ fromMaybe "" (lookup (length cs - 1) largeNums)
                                ++ " " ++ convNum (tail cs)
-                      2 | c /= '0' -> ones !! i ++ " hundred " ++ recur
-                        | otherwise -> recur
+                      2 | c /= '0' -> ones !! i ++ " hundred " ++ convNum cs
+                        | otherwise -> convNum cs
                   where i = C.digitToInt c
-                        recur = convNum cs
