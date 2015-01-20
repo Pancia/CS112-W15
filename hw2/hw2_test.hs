@@ -6,15 +6,15 @@ main = runTestTT $ TestList hw2Tests
 
 hw2Tests :: [Test]
 hw2Tests =
-        [myFoldl (+) 0 [1..5] ~?= 15
-        ,myFoldl (-) 0 [1..5] ~?= -15
-        ,myReverse [1..5] ~?= [5,4..1]
-        ,myFoldr (+) 0 [1..5] ~?= 15
-        ,myFoldr (-) 0 [1..5] ~?= 3
-        ,myFoldl2 (+) 0 [1..5] ~?= 15
-        ,myFoldl2 (-) 0 [1..5] ~?= -15
-        ,and (map isUpper ['A'..'Z']) ~?= True
-        ,map isUpper ['1', 'a', 'A'] ~?= [False, False, True]
+        [(myFoldl (+) 0 [1..5]  :: Integer) ~?= 15
+        ,(myFoldl (-) 0 [1..5]  :: Integer) ~?= -15
+        ,(myFoldr (+) 0 [1..5]  :: Integer) ~?= 15
+        ,(myFoldr (-) 0 [1..5]  :: Integer) ~?= 3
+        ,(myFoldl2 (+) 0 [1..5] :: Integer) ~?= 15
+        ,(myFoldl2 (-) 0 [1..5] :: Integer) ~?= -15
+        ,(myReverse [1..5] :: [Integer]) ~?= [5,4..1]
+        ,all isUpper ['A'..'Z'] ~?= True
+        ,map isUpper "1aA" ~?= [False, False, True]
         ,onlyCapitals1 "Hello, World!" ~?= "HW"
         ,onlyCapitals2 "Hello, World!" ~?= "HW"
         ,onlyCapitals3 "Hello, World!" ~?= "HW"
