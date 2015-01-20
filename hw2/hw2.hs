@@ -14,7 +14,7 @@ myFoldl _ i []     = i
 myFoldl f i (x:xs) = f (myFoldl f i xs) x
 
 myReverse :: [a] -> [a]
-myReverse = myFoldl (\rev x -> rev ++ [x]) []
+myReverse = foldl (\rev x -> [x] ++ rev) []
 
 myFoldr :: (a -> b -> b) -> b -> [a] -> b
 myFoldr _ i []     = i
