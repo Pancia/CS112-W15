@@ -6,10 +6,10 @@ import qualified Data.Char as C
 
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
 myFoldl _ i []     = i
-myFoldl f i (x:xs) = f (myFoldl f i xs) x
+myFoldl f i (x:xs) = myFoldl f (f i x) xs
 
 myReverse :: [a] -> [a]
-myReverse = foldl (\rev x -> [x] ++ rev) []
+myReverse = foldl (flip (:)) []
 
 myFoldr :: (a -> b -> b) -> b -> [a] -> b
 myFoldr _ i []     = i
