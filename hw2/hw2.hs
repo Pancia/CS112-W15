@@ -1,13 +1,8 @@
 module Hw2 where
 
-import Data.List.Split
 import Data.Maybe
 
 import qualified Data.Char as C
-
---HERE BE DRAGONS
---TODO: Remove me
-import Debug.Trace
 
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
 myFoldl _ i []     = i
@@ -82,16 +77,17 @@ sayNum = (++ " ") . unwords . removeLastZero . words . convNum
                   --     if 2 => 100's pos (x00, x00000..)
                   case length cs `mod` 3 of
                       0 | not (null cs) ->
-                               ones !! i ++ " "
-                               ++ fromJust (lookup (length cs) largeNums)
-                               ++ " " ++ convNum cs
+                          ones !! i ++ " "
+                          ++ fromJust (lookup (length cs) largeNums)
+                          ++ " " ++ convNum cs
                         | c == '0' -> "zero "
                         | otherwise -> ones !! i ++ " "
                       1 | c /= '1' -> tens !! i ++ " " ++ convNum cs
                         | head cs == '0' -> "ten " ++ convNum cs
                         | otherwise -> teens !! C.digitToInt (head cs) ++ " "
-                               ++ fromMaybe "" (lookup (length cs - 1) largeNums)
-                               ++ " " ++ convNum (tail cs)
+                          ++ fromMaybe "" (lookup (length cs - 1) largeNums)
+                          ++ " " ++ convNum (tail cs)
                       2 | c /= '0' -> ones !! i ++ " hundred " ++ convNum cs
                         | otherwise -> convNum cs
+                      _ -> ""
                   where i = C.digitToInt c
