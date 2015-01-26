@@ -23,7 +23,6 @@ transition(q3,q3,a).
 accepting(q2).
 accepting(q3).
 
-accepts(S, [])    :- accepting(S).
-accepts(S, [F|R]) :- (transition(S, Q, F),
-                     (accepting(Q); accepts(Q, R)));
-                     accepting(S), F = [].
+accepts(S, []) :- accepting(S).
+
+accepts(S, [F|R]) :- transition(S, Q, F), accepts(Q, R).
