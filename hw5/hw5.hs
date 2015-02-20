@@ -1,15 +1,15 @@
 module Hw5 where
 
 import Control.Applicative hiding ((<|>), empty)
-import Data.Map
+import Data.Map as M
 import Data.Char (toLower)
+import Data.Maybe
 
 import Text.Parsec
 import Text.Parsec.Expr
 import Text.Parsec.Language (emptyDef)
 import Text.Parsec.String (Parser)
 import qualified Text.Parsec.Token as P
-
 
 --------- AST Nodes ---------
 
@@ -19,12 +19,25 @@ type Variable = String
 -- Values are either integers or booleans
 data Value = IntVal Int       -- Integer value
            | BoolVal Bool     -- Boolean value
+           deriving (Eq)
 
 -- Expressions are variables, literal values, unary and binary operations
 data Expression = Var Variable                    -- e.g. x
                 | Val Value                       -- e.g. 2
                 | BinOp Op Expression Expression  -- e.g. x + 3
                 | Assignment Variable Expression  -- e.g. x = 3
+
+--store = map var val
+evalE :: Expression -> Store -> (Value, Store)
+evalE (BinOp op e1 e2) s = (applyOp op e1' e2', s'')
+    where (e1', s')  = evalE e1 s
+          (e2', s'') = evalE e2 s'
+evalE (Var x) s = (x', s)
+    where x' = fromMaybe (error "not found") $ M.lookup x s
+evalE (Val v) s = (v, s)
+evalE (Assignment x v) s = (v', s'')
+    where (v', s') = evalE v s
+          s'' = M.insert x v' s'
 
 -- Statements are expressions, conditionals, while loops and sequences
 data Statement = Expr Expression                   -- e.g. x = 23
@@ -174,6 +187,11 @@ pp :: String -> IO ()
 pp input = case parse stmtParser "" input of
     Left err -> print err
     Right x  -> print x
+
+r' :: (Show v) => Parser n -> String -> (n -> Store -> v) -> v
+r' parser input eval = case parse parser "" input of
+                           Left err -> error $ show err
+                           Right x -> eval x empty
 
 -- Parse and run the given WHILE programs
 run :: (Show v) => Parser n -> String -> (n -> Store -> v) -> IO ()

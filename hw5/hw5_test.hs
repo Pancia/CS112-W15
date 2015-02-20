@@ -3,6 +3,8 @@ module Hw5Test where
 import Test.HUnit
 import Hw5
 
+import Data.Map
+
 main :: IO Counts
 main = runTestTT $ TestList tests
 
@@ -11,19 +13,19 @@ tests = [p' "1+1" ~?= "1 + 1"
         ,p' "23*x<42" ~?= "23 * x < 42"
         ,p' "if false then x=2 else x = 3 end ; x = x + 2" ~?= "if false then x = 2 else x = 3 end;x = x + 2"
         ,p' "x = 1; while x < 5 do x = x + 1 end" ~?= "x = 1;while x < 5 do x = x + 1 end"
-      --,evalE (Val (BoolVal True)) Data.Map.empty ~?= (true,fromList [])
-      --,run exprParser "1+1" evalE ~?= (2,fromList [])
-      --,run exprParser "13*2 < 27" evalE ~?= (true,fromList [])
-      --,evalE (Var "x") (fromList [("x",IntVal 23)]) ~?= (23,fromList [("x",23)])
-      --,run exprParser "x = 23" evalE ~?= (23,fromList [("x",23)])
-      --,run exprParser "x = y = 2 + 3" evalE ~?= (5,fromList [("x",5),("y",5)])
+        ,evalE (Val (BoolVal True)) Data.Map.empty ~?= (BoolVal True,fromList [])
+        ,r' exprParser "1+1" evalE ~?= (IntVal 2,fromList [])
+        ,r' exprParser "13*2 < 27" evalE ~?= (BoolVal True,fromList [])
+        ,evalE (Var "x") (fromList [("x",IntVal 23)]) ~?= (IntVal 23,fromList [("x",IntVal 23)])
+        ,r' exprParser "x = 23" evalE ~?= (IntVal 23,fromList [("x",IntVal 23)])
+        ,r' exprParser "x = y = 2 + 3" evalE ~?= (IntVal 5,fromList [("x",IntVal 5),("y",IntVal 5)])
       --
-      --,run stmtParser "x=1+1" evalS ~?= fromList [("x",2)]
-      --,run stmtParser "x = 2; x = x + 3" evalS ~?= fromList [("x",5)]
-      --,run stmtParser "if true then x = 1 else x = 2 end" evalS ~?= fromList [("x",1)]
-      --,run stmtParser "x = 2; y = x + 3; if y < 4 then z = true else z = false end" evalS ~?= fromList [("x",2),("y",5),("z",false)]
-      --,run stmtParser "x = 1; while x < 3 do x = x + 1 end" evalS ~?= fromList [("x",3)]
-      --,run stmtParser "x = 1 ; y = 1; while x < 5 do x = x + 1 ; y = y * x end" evalS ~?= fromList [("x",5),("y",120)]
+        ,r' stmtParser "x=1+1" evalS ~?= fromList [("x",2)]
+        ,r' stmtParser "x = 2; x = x + 3" evalS ~?= fromList [("x",5)]
+        ,r' stmtParser "if true then x = 1 else x = 2 end" evalS ~?= fromList [("x",1)]
+        ,r' stmtParser "x = 2; y = x + 3; if y < 4 then z = true else z = false end" evalS ~?= fromList [("x",2),("y",5),("z",false)]
+        ,r' stmtParser "x = 1; while x < 3 do x = x + 1 end" evalS ~?= fromList [("x",3)]
+        ,r' stmtParser "x = 1 ; y = 1; while x < 5 do x = x + 1 ; y = y * x end" evalS ~?= fromList [("x",5),("y",120)]
       --
       --,run exprParser "1+1" evalE_maybe ~?= Just (2,fromList [])
       --,run exprParser "10 < x + 1" evalE_maybe ~?= Nothing
