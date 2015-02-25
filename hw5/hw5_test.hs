@@ -44,7 +44,7 @@ tests = [p' "1+1" ~?= "1 + 1"
         ,show (For "a" (Val (IntVal 1)) (Val (IntVal 2)) (Expr (Val (IntVal 3)))) ~?= "for a in 1 to 2 do 3 end"
         ,show (parse stmtParser "" "for x in 1 to 4 do y = x end") ~?= "Right for x in 1 to 4 do y = x end"
         ,r' stmtParser "for x in 1 to 4 do y = x end" evalS ~?= fromList [("x",IntVal 5),("y",IntVal 4)]
-        ,r' stmtParser "for x in 1 to 4 do y = x end" evalS_maybe ~?= Just (fromList [("x",IntVal 5),("y",IntVal 4)])
+        ,r' stmtParser "for x in 1 to 3 do y = x end" evalS_maybe ~?= Just (fromList [("x",IntVal 4),("y",IntVal 3)])
         ,r' stmtParser "for x in 1 to 4 do y = z end" evalS_maybe ~?= Nothing
         ,runMonad "for x in 1 to 4 do y = x end" ~?= Just (fromList [("x",IntVal 5),("y",IntVal 4)])
         ,runMonad "for x in 1 to 4 do y = z end" ~?= Nothing

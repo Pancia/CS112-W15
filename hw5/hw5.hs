@@ -89,7 +89,13 @@ evalS (If e s1 s2) s     = case evalE e s of
                              (BoolVal True,s')  -> evalS s1 s'
                              (BoolVal False,s') -> evalS s2 s'
                              _                  -> error "Condition must be a BoolVal"
-evalS f@(For v e1 e2 st) s = undefined
+evalS f@(For v start end body) s = let (init, _) = evalE start s
+                                       (final, _) = evalE end s
+                                       (v', s') = evalE (Assignment v (BinOp Plus (Val init) $ Val $ IntVal 1)) s
+                                       s'' = evalS body s'
+                                   in if (v' < final)
+                                          then evalS (For v (Val v') end body) s''
+                                          else snd $ evalE (Assignment v (BinOp Plus (Var v) $ Val $ IntVal 1)) s''
 
 evalS_maybe :: Statement -> Store -> Maybe Store
 evalS_maybe w@(While e s1) s = do x <- evalE_maybe e s
@@ -106,6 +112,13 @@ evalS_maybe (If e s1 s2) s = do x <- evalE_maybe e s
                                     (BoolVal True,s') -> evalS_maybe s1 s'
                                     (BoolVal False,s') -> evalS_maybe s2 s'
                                     _ -> Nothing
+evalS_maybe (For v start end body) s = do (init, _) <- evalE_maybe start s
+                                          (final, _) <- evalE_maybe end s
+                                          (v', s') <- evalE_maybe (Assignment v (BinOp Plus (Val init) $ Val $ IntVal 1)) s
+                                          s'' <- evalS_maybe body s'
+                                          if (v' < final)
+                                              then evalS_maybe (For v (Val v') end body) s''
+                                              else do return . snd =<< evalE_maybe (Assignment v (BinOp Plus (Var v) $ Val $ IntVal 1)) s''
 
 evalS_monad :: Statement -> Imperative ()
 evalS_monad (While e s1) = do e' <- evalE_monad e
@@ -133,7 +146,6 @@ evalS_monad (For v start end body) = do init <- evalE_monad start
                                            then evalS_monad (For v (Val v') end body)
                                            else do setVar v $ applyOp Plus v' $ IntVal 1
                                                    return ()
-
 
 -- All binary operations
 data Op = Plus         --  +  :: Int -> Int -> Int
